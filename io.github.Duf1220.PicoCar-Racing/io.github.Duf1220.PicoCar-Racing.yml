@@ -24,7 +24,7 @@ modules:
   - name: picocar-racing
     buildsystem: simple
     build-commands:
-      - cat PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part0 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part1 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part2 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part3 | tar -xJ --strip-components=1
+      - cat PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part0 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part1 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part2 PicoCarRacing-1.0.0-linux-x86_64.tar.xz.part3 | tar -xJ --no-same-owner --no-same-permissions --strip-components=1
       - mkdir -p /app/lib/picocar-racing
       - cp -r "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so /app/lib/picocar-racing/
       # archiv vznikl na FAT SD kartě, kde se ztratil příznak spustitelnosti
