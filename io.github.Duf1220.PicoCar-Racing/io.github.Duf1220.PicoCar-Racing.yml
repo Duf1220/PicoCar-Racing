@@ -36,8 +36,8 @@ modules:
       - install -Dm644 io.github.Duf1220.PicoCar-Racing.png /app/share/icons/hicolor/256x256/apps/io.github.Duf1220.PicoCar-Racing.png
     sources:
       - type: archive
-        url: https://github.com/Duf1220/PicoCar-Racing/releases/download/v1.0.0/PicoCarRacing-1.0.0-linux-x86_64.tar.gz
-        sha256: 3ef74a909aff37031dcbba37f57e0a44dfef7c74e4cd44f769255bb405e27cb8
+        url: https://github.com/Duf1220/PicoCar-Racing/releases/download/v1.0.0/PicoCarRacing-1.0.0-linux-x86_64.tar.xz
+        sha256: 4b2d2e7e432f9925de8a59cb0f75e8df39bfa51de1762d672d9526ed3db5d8d6
         only-arches:
           - x86_64
       - type: file

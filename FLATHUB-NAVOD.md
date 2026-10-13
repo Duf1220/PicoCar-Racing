@@ -36,24 +36,24 @@ Hra obsahuje knihovny Unity Services (Analytics 4.4.0, Purchasing 4.9.3, Adverti
 
 ## 3. Zabalení hry do tar.gz
 
-Pro build z SD karty je hotovo: `release/PicoCarRacing-1.0.0-linux-x86_64.tar.gz`, hash v `release/SHA256SUMS`.
+Pro build z SD karty je hotovo: `release/PicoCarRacing-1.0.0-linux-x86_64.tar.xz`, hash v `release/SHA256SUMS`.
 
 Po rebuildu zabalte znovu. Na Linuxu (zachová příznak spustitelnosti):
 
 ```bash
-tar --transform 's,^,PicoCarRacing-1.0.0/,' -czf PicoCarRacing-1.0.0-linux-x86_64.tar.gz "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so
+tar --transform 's,^,PicoCarRacing-1.0.0/,' -cJf PicoCarRacing-1.0.0-linux-x86_64.tar.xz "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so
 ```
 
 Na Windows v Git Bash (příznak se ztratí, manifest to řeší příkazem `chmod`):
 
 ```bash
-tar --force-local --transform 's,^,PicoCarRacing-1.0.0/,' -czf PicoCarRacing-1.0.0-linux-x86_64.tar.gz "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so
+tar --force-local --transform 's,^,PicoCarRacing-1.0.0/,' -cJf PicoCarRacing-1.0.0-linux-x86_64.tar.xz "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so
 ```
 
 Hash:
 
 ```bash
-sha256sum PicoCarRacing-1.0.0-linux-x86_64.tar.gz
+sha256sum PicoCarRacing-1.0.0-linux-x86_64.tar.xz
 ```
 
 ## 4. Hosting souborů na GitHubu
@@ -62,7 +62,7 @@ Flathub si zdroje stahuje sám z pevné URL, SD kartu ani lokální soubory pou�
 
 1. Založte repozitář `https://github.com/Duf1220/PicoCar-Racing` (může být soukromý jen pokud je Release veřejný, jednodušší je veřejný).
 2. Nahrajte screenshoty do `screenshots/1.png` atd. (odkazy v metainfo jsou `raw.githubusercontent.com/.../main/screenshots/1.png`).
-3. Vytvořte **Release** s tagem `v1.0.0` a jako asset nahrajte `PicoCarRacing-1.0.0-linux-x86_64.tar.gz` (limit GitHubu je 2 GB na soubor).
+3. Vytvořte **Release** s tagem `v1.0.0` a jako asset nahrajte `PicoCarRacing-1.0.0-linux-x86_64.tar.xz` (limit GitHubu je 2 GB na soubor).
 4. Do manifestu dejte URL assetu a `sha256`.
 5. Volitelně nahrajte do repozitáře složku `io.github.Duf1220.PicoCar-Racing/` a `.github/workflows/flatpak.yml` – GitHub Actions pak build a lint udělá za vás (nemáte doma Linux ani WSL).
 
@@ -109,4 +109,4 @@ git clone --branch=new-pr https://github.com/Duf1220/flathub.git && cd flathub &
 - `io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.metainfo.xml` – doplněné metainfo (licence, kontakt, ovládání, branding, CZ překlady).
 - `io.github.Duf1220.PicoCar-Racing/flathub.json` – jen x86_64 (Unity build nemá aarch64).
 - `.github/workflows/flatpak.yml` – CI build + lint na GitHub Actions.
-- `../release/PicoCarRacing-1.0.0-linux-x86_64.tar.gz` + `SHA256SUMS` – zabalený build z SD karty (bez ladicích symbolů).
+- `../release/PicoCarRacing-1.0.0-linux-x86_64.tar.xz` + `SHA256SUMS` – zabalený build z SD karty (bez ladicích symbolů).
