@@ -1,0 +1,50 @@
+# Flatpak manifest pro PicoCar Racing (Unity 2022.3.3f1, Linux x86_64 build)
+#
+app-id: io.github.Duf1220.PicoCar-Racing
+runtime: org.freedesktop.Platform
+runtime-version: '26.08'
+sdk: org.freedesktop.Sdk
+command: picocar-racing
+separate-locales: false
+
+finish-args:
+  # Unity 2022 nemá nativní Wayland backend, běží přes X11 / XWayland
+  - --share=ipc
+  - --socket=x11
+  # Zvuk (Unity používá PulseAudio / PipeWire-pulse)
+  - --socket=pulseaudio
+  # GPU akcelerace (OpenGL / Vulkan)
+  - --device=dri
+  # Gamepady (Unity čte /dev/input přes evdev). Pokud hra ovladače nepodporuje, smažte.
+  - --device=input
+  # Síť: hra obsahuje Unity Analytics / IAP / Ads knihovny. Nechte VYPNUTO, pokud
+  # hra bez sítě funguje (otestovat!). Pokud ji nutně potřebuje, odkomentujte a
+  # v metainfo popište, k čemu se síť používá.
+  # - --share=network
+
+modules:
+  - name: picocar-racing
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/lib/picocar-racing
+      - cp -r "PicoCar Racing.x86_64" "PicoCar Racing_Data" UnityPlayer.so /app/lib/picocar-racing/
+      # tar.gz vznikl na FAT SD kartě, kde se ztratil příznak spustitelnosti
+      - chmod 755 "/app/lib/picocar-racing/PicoCar Racing.x86_64"
+      - install -Dm755 picocar-racing /app/bin/picocar-racing
+      - install -Dm644 io.github.Duf1220.PicoCar-Racing.desktop -t /app/share/applications
+      - install -Dm644 io.github.Duf1220.PicoCar-Racing.metainfo.xml -t /app/share/metainfo
+      - install -Dm644 io.github.Duf1220.PicoCar-Racing.png /app/share/icons/hicolor/256x256/apps/io.github.Duf1220.PicoCar-Racing.png
+    sources:
+      - type: archive
+        url: https://github.com/Duf1220/PicoCar-Racing/releases/download/v1.0.0/PicoCarRacing-1.0.0-linux-x86_64.tar.gz
+        sha256: 3ef74a909aff37031dcbba37f57e0a44dfef7c74e4cd44f769255bb405e27cb8
+        only-arches:
+          - x86_64
+      - type: file
+        path: picocar-racing
+      - type: file
+        path: io.github.Duf1220.PicoCar-Racing.desktop
+      - type: file
+        path: io.github.Duf1220.PicoCar-Racing.metainfo.xml
+      - type: file
+        path: io.github.Duf1220.PicoCar-Racing.png

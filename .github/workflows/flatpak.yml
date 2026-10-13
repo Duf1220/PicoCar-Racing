@@ -1,0 +1,35 @@
+# Sestaví a zkontroluje Flatpak na GitHub Actions (nepotřebujete Linux doma).
+# Zkopírujte do repozitáře Duf1220/PicoCar-Racing do .github/workflows/flatpak.yml
+# a složku io.github.Duf1220.PicoCar-Racing/ do kořene repozitáře.
+name: Flatpak build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-26.08
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint manifest
+        run: |
+          flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
+
+      - name: Build
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
+          bundle: PicoCarRacing.flatpak
+          cache-key: flatpak-builder-${{ github.sha }}
+          repository-name: flathub
+          repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo
+          upload-artifact: true
+
+      - name: Lint repo
+        run: |
+          flatpak run --command=flatpak-builder-lint org.flatpak.Builder repo repo
