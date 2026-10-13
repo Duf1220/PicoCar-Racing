@@ -1,6 +1,7 @@
-# Sestaví a zkontroluje Flatpak na GitHub Actions (nepotřebujete Linux doma).
+# Sestaví a zkontroluje Flatpak na GitHub Actions stejným postupem, jaký doporučuje
+# dokumentace Flathubu (org.flatpak.Builder + flatpak-builder-lint).
 # Spouští se ručně (Actions -> Flatpak build -> Run workflow) nebo při změně
-# souborů balíčku. Vyžaduje, aby v Release v1.0.0 už byl nahraný tar.gz.
+# souborů balíčku. Vyžaduje, aby v Release v1.0.0 byly nahrané díly archivu.
 name: Flatpak build
 on:
   workflow_dispatch:
@@ -9,6 +10,9 @@ on:
     paths:
       - 'io.github.Duf1220.PicoCar-Racing/**'
       - '.github/workflows/flatpak.yml'
+
+env:
+  APP_ID: io.github.Duf1220.PicoCar-Racing
 
 jobs:
   flatpak:
@@ -19,32 +23,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install flatpak-builder-lint
+      - name: Install org.flatpak.Builder
         run: |
           flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           flatpak install -y --noninteractive --user flathub org.flatpak.Builder
 
+      - name: Prepare writable build directory
+        run: |
+          rm -rf "$HOME/build" && mkdir -p "$HOME/build"
+          cp -r "$APP_ID" "$HOME/build/"
+
       - name: Lint manifest
         run: |
-          rm -rf "$HOME/lint" && mkdir -p "$HOME/lint" && cp -r io.github.Duf1220.PicoCar-Racing "$HOME/lint/"
-          cd "$HOME/lint" && flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
+          cd "$HOME/build"
+          flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder manifest "$APP_ID/$APP_ID.yml"
 
       - name: Build
-        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
-        with:
-          manifest-path: io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
-          bundle: PicoCarRacing.flatpak
-          cache: false
-          repository-name: flathub
-          repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo
-          upload-artifact: true
-          mirror-screenshots-url: https://dl.flathub.org/media/
-
-      - name: Commit mirrored screenshots to repo
         run: |
-          ostree commit --repo=repo --canonical-permissions --branch=screenshots/x86_64 flatpak_app/files/share/app-info/media
+          cd "$HOME/build"
+          flatpak run --user org.flatpak.Builder --user --force-clean --sandbox \
+            --install-deps-from=flathub --default-branch=master \
+            --mirror-screenshots-url=https://dl.flathub.org/media/ --compose-url-policy=full \
+            --repo=repo builddir "$APP_ID/$APP_ID.yml"
+          ostree commit --repo=repo --canonical-permissions --branch=screenshots/x86_64 builddir/files/share/app-info/media
+          flatpak build-bundle repo "PicoCarRacing-x86_64.flatpak" --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo --arch=x86_64 "$APP_ID"
+          ls -la PicoCarRacing-x86_64.flatpak
 
       - name: Lint repo
         run: |
-          rm -rf "$HOME/lint-repo" && cp -r repo "$HOME/lint-repo"
-          cd "$HOME" && flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder repo lint-repo
+          cd "$HOME/build"
+          flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder repo repo
+
+      - name: Upload bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PicoCarRacing-x86_64.flatpak
+          path: ~/build/PicoCarRacing-x86_64.flatpak
+          if-no-files-found: ignore
