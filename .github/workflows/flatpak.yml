@@ -42,7 +42,7 @@ jobs:
       - name: Build
         run: |
           cd "$HOME/build"
-          flatpak-builder --user --force-clean --sandbox --install-deps-from=flathub --default-branch=master --mirror-screenshots-url=https://dl.flathub.org/media/ --compose-url-policy=full --repo=repo builddir "$APP_ID/$APP_ID.yml"
+          flatpak-builder --user --force-clean --sandbox --disable-rofiles-fuse --install-deps-from=flathub --default-branch=master --mirror-screenshots-url=https://dl.flathub.org/media/ --compose-url-policy=full --repo=repo builddir "$APP_ID/$APP_ID.yml"
           ostree commit --repo=repo --canonical-permissions --branch=screenshots/x86_64 builddir/files/share/app-info/media
           flatpak build-bundle repo PicoCarRacing-x86_64.flatpak --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo --arch=x86_64 "$APP_ID"
           ls -la PicoCarRacing-x86_64.flatpak
