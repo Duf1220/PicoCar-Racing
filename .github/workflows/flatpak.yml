@@ -23,10 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install org.flatpak.Builder
+      - name: Install org.flatpak.Builder, runtime and SDK
         run: |
           flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install -y --noninteractive --user flathub org.flatpak.Builder
+          flatpak install -y --noninteractive --user flathub org.flatpak.Builder org.freedesktop.Platform//26.08 org.freedesktop.Sdk//26.08
 
       - name: Prepare writable build directory
         run: |
