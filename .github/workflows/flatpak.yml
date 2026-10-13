@@ -38,6 +38,11 @@ jobs:
           repository-name: flathub
           repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo
           upload-artifact: true
+          mirror-screenshots-url: https://dl.flathub.org/media/
+
+      - name: Commit mirrored screenshots to repo
+        run: |
+          ostree commit --repo=repo --canonical-permissions --branch=screenshots/x86_64 flatpak_app/files/share/app-info/media
 
       - name: Lint repo
         run: |
