@@ -26,7 +26,8 @@ jobs:
 
       - name: Lint manifest
         run: |
-          flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
+          rm -rf "$HOME/lint" && mkdir -p "$HOME/lint" && cp -r io.github.Duf1220.PicoCar-Racing "$HOME/lint/"
+          cd "$HOME/lint" && flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
 
       - name: Build
         uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
@@ -40,4 +41,5 @@ jobs:
 
       - name: Lint repo
         run: |
-          flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder repo repo
+          rm -rf "$HOME/lint-repo" && cp -r repo "$HOME/lint-repo"
+          cd "$HOME" && flatpak run --user --command=flatpak-builder-lint org.flatpak.Builder repo lint-repo
