@@ -1,11 +1,14 @@
 # Sestaví a zkontroluje Flatpak na GitHub Actions (nepotřebujete Linux doma).
-# Zkopírujte do repozitáře Duf1220/PicoCar-Racing do .github/workflows/flatpak.yml
-# a složku io.github.Duf1220.PicoCar-Racing/ do kořene repozitáře.
+# Spouští se ručně (Actions -> Flatpak build -> Run workflow) nebo při změně
+# souborů balíčku. Vyžaduje, aby v Release v1.0.0 už byl nahraný tar.gz.
 name: Flatpak build
 on:
-  push:
-  pull_request:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'io.github.Duf1220.PicoCar-Racing/**'
+      - '.github/workflows/flatpak.yml'
 
 jobs:
   flatpak:
@@ -21,11 +24,11 @@ jobs:
           flatpak run --command=flatpak-builder-lint org.flatpak.Builder manifest io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
 
       - name: Build
-        uses: flathub-infra/flatpak-github-actions/flatpak-builder@v6
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
         with:
           manifest-path: io.github.Duf1220.PicoCar-Racing/io.github.Duf1220.PicoCar-Racing.yml
           bundle: PicoCarRacing.flatpak
-          cache-key: flatpak-builder-${{ github.sha }}
+          cache: false
           repository-name: flathub
           repository-url: https://dl.flathub.org/repo/flathub.flatpakrepo
           upload-artifact: true
