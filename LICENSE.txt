@@ -1,0 +1,16 @@
+PicoCar Racing - License
+
+Copyright (c) 2023-2026 UPSIDE DOWN VR s.r.o. All rights reserved.
+
+PicoCar Racing is proprietary freeware. The source code is not available.
+
+You may download, install and play the game free of charge, and you may
+redistribute the official, unmodified builds published by UPSIDE DOWN VR,
+including through software repositories such as Flathub.
+
+You may not modify, decompile, disassemble or reverse engineer the game,
+create derivative works from it, sell it, or charge for its distribution.
+
+The game is provided "as is", without warranty of any kind.
+
+Contact: office@upsidedownvr.cz
